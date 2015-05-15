@@ -1,0 +1,43 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "coreyonfire",
+    "longName": "FishTank",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/orange-fish-right.png",
+                "name": "ORANGE_FISH_RIGHT",
+                "type": "png"
+            },
+            {
+                "file": "images/orange-fish-left.png",
+                "name": "ORANGE_FISH_LEFT",
+                "type": "png"
+            },
+            {
+                "file": "images/aquariumbg.png",
+                "name": "BACKGROUND_IMAGE_AQUARIUM",
+                "type": "png"
+            },
+            {
+                "file": "fonts/HANGTHEDJ.ttf",
+                "name": "FONT_KEY_HANGDJ_40",
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "FishTank",
+    "targetPlatforms": [
+        "aplite"
+    ],
+    "uuid": "51d6baed-9436-474d-bd4b-495428a3646a",
+    "versionLabel": "0.8",
+    "watchapp": {
+        "watchface": true
+    }
+}
