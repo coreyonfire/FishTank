@@ -33,7 +33,7 @@
     "sdkVersion": "3",
     "shortName": "FishTank",
     "targetPlatforms": [
-        "aplite"
+        "basalt"
     ],
     "uuid": "51d6baed-9436-474d-bd4b-495428a3646a",
     "versionLabel": "0.8",
