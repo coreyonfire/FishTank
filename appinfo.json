@@ -9,6 +9,11 @@
     "resources": {
         "media": [
             {
+                "file": "fonts/Montserrat-ExtraBold.otf",
+                "name": "FONT_MONTSERRAT_40",
+                "type": "font"
+            },
+            {
                 "file": "images/orange-fish-right.png",
                 "name": "ORANGE_FISH_RIGHT",
                 "type": "png"
@@ -36,7 +41,7 @@
         "basalt"
     ],
     "uuid": "51d6baed-9436-474d-bd4b-495428a3646a",
-    "versionLabel": "0.8",
+    "versionLabel": "1.0",
     "watchapp": {
         "watchface": true
     }

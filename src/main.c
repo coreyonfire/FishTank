@@ -164,8 +164,9 @@ static void main_window_load(Window *window) {
   bitmap_layer_set_bitmap(s_box_layer2, s_fish_bitmap2);
   bitmap_layer_set_bitmap(s_box_layer3, s_fish_bitmap3);
   
-  // set time font
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_KEY_HANGDJ_40));
+  // set time font FONT_MONTSERRAT_40
+  //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_KEY_HANGDJ_40));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_MONTSERRAT_40));
   
   // Create time TextLayer
   s_time_layer = layer_create(GRect(0, 0, 144, 168));
