@@ -6,7 +6,15 @@
  */
 
 #include <pebble.h>
-
+  
+/* stuff that will be configurable */
+int num_fish;
+float fish_laziness;
+/* end stuff that will be configurable */
+  
+#define KEY_LAZY 0
+#define KEY_NUM_FISH 1
+  
 #define FISH_W 28
 #define FISH_H 16
 
@@ -30,6 +38,49 @@ static GBitmap *s_fish_bitmap;
 static GBitmap *s_fish_bitmap2;
 static GBitmap *s_fish_bitmap3;
 char curTime[64];
+
+/* helper function */
+bool cisdigit(char c) { return ('0' <=c && '9' >= c); };
+double catof(char *s)
+{
+        double a = 0.0;
+        int e = 0;
+        int c;
+        while ((c = *s++) != '\0' && cisdigit(c)) {
+                a = a*10.0 + (c - '0');
+        }
+        if (c == '.') {
+                while ((c = *s++) != '\0' && cisdigit(c)) {
+                        a = a*10.0 + (c - '0');
+                        e = e-1;
+                }
+        }
+        if (c == 'e' || c == 'E') {
+                int sign = 1;
+                int i = 0;
+                c = *s++;
+                if (c == '+')
+                        c = *s++;
+                else if (c == '-') {
+                        c = *s++;
+                        sign = -1;
+                }
+                while (cisdigit(c)) {
+                        i = i*10 + (c - '0');
+                        c = *s++;
+                }
+                e += i*sign;
+        }
+        while (e > 0) {
+                a *= 10.0;
+                e--;
+        }
+        while (e < 0) {
+                a *= 0.1;
+                e++;
+        }
+        return a;
+}
 
 /*
  *  TIME STUFF
@@ -111,7 +162,7 @@ static void next_animation(Layer *layer) {
   // Schedule the next animation
   s_box_animation = property_animation_create_layer_frame(layer, &start, &finish);
   animation_set_duration((Animation*)s_box_animation, rand() %ANIM_DURATION_MAX + ANIM_DURATION_MIN);
-  animation_set_delay((Animation*)s_box_animation, rand() % ANIM_DELAY_MAX + ANIM_DELAY_MIN);
+  animation_set_delay((Animation*)s_box_animation, fish_laziness * (rand() % ANIM_DELAY_MAX + ANIM_DELAY_MIN));
   animation_set_curve((Animation*)s_box_animation, AnimationCurveEaseOut);
   
   animation_set_handlers((Animation*)s_box_animation, (AnimationHandlers) {
@@ -142,7 +193,29 @@ void draw_time_text(Layer *this_layer, GContext *ctx){
 
 }
 
+static void in_recv_handler(DictionaryIterator *iterator, void *context)
+{
+  //Get Tuple
+  Tuple *t = dict_read_first(iterator);
+  if(t)
+  {
+    switch(t->key)
+    {
+    case KEY_LAZY:
+      //It's the FISH_LAZINESS key
+      fish_laziness = catof(t->value->cstring);
+      persist_write_string(KEY_LAZY, t->value->cstring);
+      break;
+    }
+  }
+}
+
 static void main_window_load(Window *window) {
+  // read values from persistent storage
+  char in[10];
+  if (persist_read_string(KEY_LAZY, in, 10) > 0) fish_laziness = catof(in);
+  else fish_laziness = 1.0;
+  
   Layer *window_layer = window_get_root_layer(window);
 
   // Create Fish Layers
@@ -178,9 +251,9 @@ static void main_window_load(Window *window) {
   bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_background_layer));
 
-  // Improve the layout to be more like a watchface
-  // Create GFont
-
+  // Register appmessage handler
+  app_message_register_inbox_received((AppMessageInboxReceived) in_recv_handler);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 
   // Add it as a child layer to the Window's root layer
   layer_add_child(window_layer, s_time_layer);
@@ -206,6 +279,7 @@ static void main_window_unload(Window *window) {
   // Destroy BitmapLayer
   bitmap_layer_destroy(s_background_layer);
 }
+
 
 static void init(void) {
   // Create main Window
